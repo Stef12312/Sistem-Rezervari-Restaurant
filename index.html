@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rezervari Restaurant</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .masa {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px #ddd;
+        }
+
+        .libera {
+            color: green;
+            font-weight: bold;
+        }
+
+        .ocupata {
+            color: red;
+            font-weight: bold;
+        }
+
+        .formular {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .anuleaza {
+            background-color: #dc3545;
+            margin-top: 10px;
+        }
+
+        .anuleaza:hover {
+            background-color: #b02a37;
+        }
+
+        .mesaj {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .succes {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .eroare {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Sistem de Rezervari la Restaurant</h1>
+
+    <!-- Mesaje de confirmare sau eroare -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for categorie, mesaj in messages %}
+            <div class="mesaj {{ categorie }}">
+                {{ mesaj }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <h2>Mesele restaurantului</h2>
+
+    {% for numar, client in mese.items() %}
+
+        <div class="masa">
+
+            <strong>Masa {{ numar }}:</strong>
+
+            {% if client %}
+
+                <span class="ocupata">
+                    Rezervata de {{ client }}
+                </span>
+
+                <form action="{{ url_for('anuleaza', nr_masa=numar) }}"
+                      method="POST">
+
+                    <button type="submit" class="anuleaza">
+                        Anuleaza rezervarea
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <span class="libera">
+                    Disponibila
+                </span>
+
+            {% endif %}
+
+        </div>
+
+    {% endfor %}
+
+    <div class="formular">
+
+        <h2>Rezerva o masa</h2>
+
+        <form action="{{ url_for('rezerva') }}" method="POST">
+
+            <label>Numele clientului:</label>
+            <input
+                type="text"
+                name="nume"
+                placeholder="Introdu numele"
+                required
+            >
+
+            <br><br>
+
+            <label>Numarul mesei:</label>
+            <input
+                type="number"
+                name="masa"
+                min="1"
+                max="10"
+                required
+            >
+
+            <br><br>
+
+            <button type="submit">
+                Rezerva masa
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
